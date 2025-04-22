@@ -25,3 +25,4 @@ build/
 # Cache
 .cache/
 .tmp/
+.vercel
