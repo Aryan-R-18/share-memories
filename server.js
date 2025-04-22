@@ -12,8 +12,16 @@ const app = express();
 app.use(bodyParser.json());
 
 // CORS Configuration
+const allowedOrigins = [process.env.CORS_ORIGIN, 'http://127.0.0.1:5500']; // Add more if needed
+
 app.use(cors({
-  origin: process.env.CORS_ORIGIN,  // Load origin from .env
+  origin: function (origin, callback) {
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ['GET', 'POST', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
