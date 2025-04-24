@@ -13,19 +13,16 @@ app.use(bodyParser.json());
 
 // CORS Configuration
 const allowedOrigins = [
-  process.env.CORS_ORIGIN,
-  'http://127.0.0.1:5500',
-  'http://localhost:5500',
-  'https://first-year-ochre.vercel.app',
-  'https://first-year-a0r1bo54p-aryan-rs-projects.vercel.app'
-];
+  process.env.CORS_ORIGIN, 
+  'http://127.0.0.1:5500', 
+  'https://first-year-co9cpjx9v-aryan-rs-projects.vercel.app'
+]; // Add more if needed
 
 app.use(cors({
   origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
       callback(null, true);
     } else {
-      console.log(`Blocked by CORS: ${origin}`);
       callback(new Error('Not allowed by CORS'));
     }
   },
