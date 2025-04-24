@@ -1,3 +1,5 @@
+// server.js
+
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -19,7 +21,6 @@ const allowedOrigins = [
 // CORS Setup
 app.use(cors({
   origin: function (origin, callback) {
-    // Check if the origin is in the allowedOrigins list
     if (allowedOrigins.includes(origin) || !origin) {
       callback(null, true);
     } else {
@@ -42,14 +43,22 @@ mongoose.connect(process.env.MONGO_URI, {
 
 // MongoDB Schema and Model
 const memorySchema = new mongoose.Schema({
-  name: String,
-  likes: String,
-  regret: String,
-  memories: String,
+  name: { type: String, required: true },
+  likes: { type: String },
+  regret: { type: String },
+  memories: { type: String, required: true },
   timestamp: { type: Date, default: Date.now }
 });
 
 const Memory = mongoose.model('Memory', memorySchema);
+
+// Middleware to log incoming requests (for debugging)
+if (process.env.NODE_ENV !== 'production') {
+  app.use((req, res, next) => {
+    console.log(`${req.method} ${req.originalUrl}`);
+    next();
+  });
+}
 
 // API Routes
 
@@ -81,6 +90,22 @@ app.get('/api/memories', async (req, res) => {
   } catch (err) {
     console.error('Error fetching memories:', err);
     res.status(500).json({ error: 'Error fetching memories' });
+  }
+});
+
+// GET - Retrieve a specific memory by ID
+app.get('/api/memories/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const memory = await Memory.findById(id);
+    if (!memory) {
+      return res.status(404).json({ error: 'Memory not found' });
+    }
+    res.status(200).json(memory);
+  } catch (err) {
+    console.error('Error fetching memory:', err);
+    res.status(500).json({ error: 'Error fetching memory' });
   }
 });
 

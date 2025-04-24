@@ -6,10 +6,10 @@ const form = document.getElementById("memoryForm");
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  const name = document.getElementById("name").value;
-  const likes = document.getElementById("likes").value;
-  const regret = document.getElementById("regret").value;
-  const memories = document.getElementById("memories").value;
+  const name = document.getElementById("name").value.trim();
+  const likes = document.getElementById("likes").value.trim();
+  const regret = document.getElementById("regret").value.trim();
+  const memories = document.getElementById("memories").value.trim();
 
   // Check if all fields are filled
   if (name && likes && regret && memories) {
@@ -29,12 +29,12 @@ form.addEventListener("submit", async (e) => {
       });
 
       const data = await response.json();
-      
+
       if (response.status === 201) {
         alert("Memory submitted successfully!");
         form.reset();  // Reset form fields after successful submission
       } else {
-        alert("Error: " + data.error);
+        alert("Error: " + (data.error || "An unexpected error occurred."));
       }
     } catch (err) {
       console.error("Error adding memory:", err);
@@ -48,7 +48,7 @@ form.addEventListener("submit", async (e) => {
 // Load and display all memories on the "View Memories" button click
 document.getElementById("viewBtn").addEventListener("click", async () => {
   const messagesContainer = document.getElementById("messages");
-  messagesContainer.innerHTML = "";  // Clear any previous memories
+  messagesContainer.innerHTML = "<p>Loading memories...</p>";  // Show loading message
 
   try {
     // Fetch memories from the backend
@@ -64,6 +64,7 @@ document.getElementById("viewBtn").addEventListener("click", async () => {
     if (memories.length === 0) {
       messagesContainer.innerHTML = "<p>No memories found.</p>";
     } else {
+      messagesContainer.innerHTML = ""; // Clear loading message
       memories.forEach((data) => {
         // Append each memory to the container
         messagesContainer.innerHTML += `
