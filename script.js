@@ -1,3 +1,6 @@
+// ✅ Update this to your Render backend URL
+const API_BASE = "https://share-memories-backend-mlkf.onrender.com";
+
 // Form submission
 const form = document.getElementById("memoryForm");
 form.addEventListener("submit", async (e) => {
@@ -11,7 +14,7 @@ form.addEventListener("submit", async (e) => {
   if (name && likes && regret && memories) {
     try {
       // Send a POST request to the server
-      const response = await fetch('http://localhost:5000/api/memories', {
+      const response = await fetch(`${API_BASE}/api/memories`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -46,7 +49,7 @@ document.getElementById("viewBtn").addEventListener("click", async () => {
 
   try {
     // Fetch messages from the backend
-    const response = await fetch('http://localhost:5000/api/memories');
+    const response = await fetch(`${API_BASE}/api/memories`);
     const memories = await response.json();
 
     memories.forEach((data) => {
