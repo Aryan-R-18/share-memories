@@ -12,13 +12,20 @@ const app = express();
 app.use(bodyParser.json());
 
 // CORS Configuration
-const allowedOrigins = [process.env.CORS_ORIGIN, 'http://127.0.0.1:5500']; // Add more if needed
+const allowedOrigins = [
+  process.env.CORS_ORIGIN,
+  'http://127.0.0.1:5500',
+  'http://localhost:5500',
+  'https://first-year-ochre.vercel.app',
+  'https://first-year-a0r1bo54p-aryan-rs-projects.vercel.app'
+];
 
 app.use(cors({
   origin: function (origin, callback) {
-    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+    if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
+      console.log(`Blocked by CORS: ${origin}`);
       callback(new Error('Not allowed by CORS'));
     }
   },
@@ -31,8 +38,8 @@ mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
-  .then(() => console.log("Connected to MongoDB"))
-  .catch((err) => console.log("MongoDB connection error:", err));
+  .then(() => console.log("✅ Connected to MongoDB"))
+  .catch((err) => console.log("❌ MongoDB connection error:", err));
 
 // MongoDB Schema and Model
 const memorySchema = new mongoose.Schema({
@@ -75,4 +82,4 @@ app.get('/api/memories', async (req, res) => {
 
 // Start Server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server is running on http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`🚀 Server is running on http://localhost:${PORT}`));
