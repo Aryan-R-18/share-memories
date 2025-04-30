@@ -3,7 +3,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const cors = require('cors');
+var cors = require('cors')
 require('dotenv').config(); // Load environment variables
 
 const app = express();
@@ -11,28 +11,30 @@ const app = express();
 // Middleware
 app.use(bodyParser.json());
 
+
 // CORS Configuration
-const allowedOrigins = [
-  process.env.CORS_ORIGIN, // Ensure this is correctly set in your .env file
-  'http://127.0.0.1:5500', // For local development, adjust as needed
-  'https://first-year-efqcqo88o-aryan-rs-projects.vercel.app' // Vercel production frontend
-];
+// const allowedOrigins = [
+//   process.env.CORS_ORIGIN, // Ensure this is correctly set in your .env file
+//   'http://127.0.0.1:5500', // For local development, adjust as needed
+//   'https://first-year-efqcqo88o-aryan-rs-projects.vercel.app' // Vercel production frontend
+// ];
 
 // CORS Setup
-app.use(cors({
-  origin: function (origin, callback) {
-    if (allowedOrigins.includes(origin) || !origin) {
-      callback(null, true);
-    } else {
-      console.log(`CORS Error: Origin ${origin} not allowed`); // Log the blocked origin
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  methods: ['GET', 'POST', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true, // Allows cookies to be included in requests
-}));
+// app.use(cors({
+//   origin: function (origin, callback) {
+//     if (allowedOrigins.includes(origin) || !origin) {
+//       callback(null, true);
+//     } else {
+//       console.log(`CORS Error: Origin ${origin} not allowed`); // Log the blocked origin
+//       callback(new Error('Not allowed by CORS'));
+//     }
+//   },
+//   methods: ['GET', 'POST', 'OPTIONS'],
+//   allowedHeaders: ['Content-Type', 'Authorization'],
+//   credentials: true, // Allows cookies to be included in requests
+// }));
 
+app.use(cors());
 // MongoDB Connection
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
